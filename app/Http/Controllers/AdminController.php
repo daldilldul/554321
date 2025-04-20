@@ -108,8 +108,4 @@ class AdminController extends Controller
         $pdf = Pdf::loadView('admin.transactions-pdf', compact('user', 'transactions'));
         return $pdf->download('transactions-' . $user->name . '.pdf');
     }
-
-    public function uhuy() {
-        
-    }
 }
