@@ -12,10 +12,10 @@
         <a href="{{ route('bank.dashboard') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
             Approval Transaksi
         </a>
-        <a href="{{ route('siswa.list') }}" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
+        <a href="{{ route('bank.siswa.list') }}" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
             Daftar Siswa
         </a>
-        <a href="{{ route('topup.form') }}" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
+        <a href="{{ route('bank.topup.form') }}" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
             Top Up Langsung
         </a>
     </div>

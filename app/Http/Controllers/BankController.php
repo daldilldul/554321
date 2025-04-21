@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class BankController extends Controller
@@ -26,17 +27,17 @@ class BankController extends Controller
         return view('bank.siswa-list', compact('siswa'));
     }
 
-    public function createSiswa()
-    {
-        return view('bank.create-siswa');
-    }
+    // public function createSiswa()
+    // {
+    //     return view('bank.create-siswa');
+    // }
 
     public function storeSiswa(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string',
         ]);
 
         User::create([
@@ -48,12 +49,6 @@ class BankController extends Controller
         ]);
 
         return redirect()->route('bank.siswa.list')->with('success', 'Siswa berhasil ditambahkan');
-    }
-
-    public function editSiswa($id)
-    {
-        $user = User::where('role', 'siswa')->findOrFail($id);
-        return view('bank.edit-siswa', compact('user'));
     }
 
     public function updateSiswa(Request $request, $id)
@@ -115,7 +110,7 @@ class BankController extends Controller
             'type' => 'topup',
             'amount' => $validated['amount'],
             'status' => 'approved',
-            'note' => 'Topup langsung oleh bank',
+            'description' => 'Topup langsung oleh bank',
         ]);
 
         return redirect()->route('bank.siswa.list')->with('success', 'Topup berhasil dilakukan');
@@ -144,7 +139,7 @@ class BankController extends Controller
                 $user->save();
             } else {
                 $transaction->status = 'rejected';
-                $transaction->note = 'Saldo tidak cukup';
+                $transaction->descriptions = 'Saldo tidak cukup';
                 $transaction->save();
                 return back()->with('error', 'Saldo siswa tidak cukup');
             }
@@ -165,5 +160,64 @@ class BankController extends Controller
         $transaction->save();
 
         return back()->with('success', 'Transaksi berhasil ditolak');
+    }
+
+    // public function requestWithdrawUser(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'amount' => 'required|numeric|min:1000',
+    //     ]);
+
+    //     $user = Auth::user();
+
+    //     if ($user->saldo < $validated['amount']) {
+    //         return back()->withErrors(['amount' => 'Saldo tidak cukup'])->withInput();
+    //     }
+
+    //     Transaction::create([
+    //         'user_id' => $user->id,
+    //         'type' => 'withdraw',
+    //         'amount' => $validated['amount'],
+    //         'status' => 'pending',
+    //     ]);
+
+    //     return redirect()->route('siswa.dashboard')->with('success', 'Permintaan withdraw berhasil dibuat, menunggu persetujuan bank');
+    // }
+
+    public function withdrawForm($id = null)
+    {
+        $siswa = null;
+        $allSiswa = User::where('role', 'siswa')->orderBy('name')->get();
+
+        if ($id) {
+            $siswa = User::where('role', 'siswa')->findOrFail($id);
+        }
+
+        return view('bank.withdraw-form', compact('siswa', 'allSiswa'));
+    }
+
+    public function processWithdraw(Request $request)
+    {
+        $validated = $request->validate([
+            'siswa_id' => 'required|exists:users,id',
+            'amount' => 'required|numeric|min:1000',
+        ]);
+
+        $siswa = User::findOrFail($validated['siswa_id']);
+
+        // Langsung withdraw tanpa approval
+        $siswa->saldo -= $validated['amount'];
+        $siswa->save();
+
+        // Catat transaksi
+        Transaction::create([
+            'user_id' => $siswa->id,
+            'type' => 'withdraw',
+            'amount' => $validated['amount'],
+            'status' => 'approved',
+            'description' => 'Withdraw langsung oleh bank',
+        ]);
+
+        return redirect()->route('bank.siswa.list')->with('success', 'Withdraw berhasil dilakukan');
     }
 }

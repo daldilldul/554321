@@ -21,17 +21,17 @@ class AkunSeeder extends Seeder
                 'role' => 'admin',
                 'password' => '12345'
             ],
-            [
-                'name' => 'dli',
-                'email' => 'bank@gmail.com',
-                'role' => 'bank',
-                'password' => '12345'
-            ],[
-                'name' => 'jul',
-                'email' => 'siswa@gmail.com',
-                'role' => 'siswa',
-                'password' => '12345'
-            ],
+            // [
+            //     'name' => 'dli',
+            //     'email' => 'bank@gmail.com',
+            //     'role' => 'bank',
+            //     'password' => '12345'
+            // ],[
+            //     'name' => 'jul',
+            //     'email' => 'siswa@gmail.com',
+            //     'role' => 'siswa',
+            //     'password' => '12345'
+            // ],
         ];
 
         foreach($userData as $item) {

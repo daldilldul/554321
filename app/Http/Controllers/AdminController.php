@@ -25,9 +25,9 @@ class AdminController extends Controller
     public function storeUser(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string',
             'role' => 'required|in:bank,siswa',
         ]);
 
@@ -52,20 +52,21 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
-            'role' => 'required|in:bank,siswa',
-        ]);
+        // $validated = $request->validate([
+        //     'name' => 'required|string',
+        //     'email' => 'required|string|email|unique:users,email,'.$id,
+        //     'role' => 'required|in:bank,siswa',
+        // ]);
+
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->role = $request['role'];
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->role = $validated['role'];
-        $user->save();
+        $user->update();
 
         return redirect()->route('admin.dashboard')->with('success', 'User berhasil diperbarui');
     }

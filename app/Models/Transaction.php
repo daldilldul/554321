@@ -12,7 +12,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
-        'target',
+        'target_id',
         'type',
         'amount',
         'status',

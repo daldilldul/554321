@@ -16,15 +16,14 @@ class SiswaController extends Controller
             ->orWhere('target_id', $user->id)
             ->with(['user', 'target'])
             ->orderBy('created_at', 'desc')
-            ->take(10)
             ->get();
 
-        return view('siswa.dashboard', compact('transactions'));
-    }
+        $siswa = User::where('role', 'siswa')
+            ->where('id', '!=', Auth::id())
+            ->orderBy('name')
+            ->get();
 
-    public function topupForm()
-    {
-        return view('siswa.topup-form');
+        return view('siswa.dashboard', compact('transactions', 'siswa'));
     }
 
     public function requestTopup(Request $request)
@@ -43,16 +42,6 @@ class SiswaController extends Controller
         return redirect()->route('siswa.dashboard')->with('success', 'Permintaan top-up berhasil dibuat, menunggu persetujuan bank');
     }
 
-    public function transferForm()
-    {
-        $siswa = User::where('role', 'siswa')
-            ->where('id', '!=', Auth::id())
-            ->orderBy('name')
-            ->get();
-
-        return view('siswa.transfer-form', compact('siswa'));
-    }
-
     public function processTransfer(Request $request)
     {
         $validated = $request->validate([
@@ -60,7 +49,8 @@ class SiswaController extends Controller
             'amount' => 'required|numeric|min:1000',
         ]);
 
-        $user = Auth::findOrFail();
+        $currentuser = Auth::user();
+        $user = User::find($currentuser->id);
         $target = User::findOrFail($validated['target_id']);
 
         if ($user->saldo < $validated['amount']) {
@@ -87,11 +77,6 @@ class SiswaController extends Controller
         return redirect()->route('siswa.dashboard')->with('success', 'Transfer berhasil dilakukan');
     }
 
-    public function withdrawForm()
-    {
-        return view('siswa.withdraw-form');
-    }
-
     public function requestWithdraw(Request $request)
     {
         $validated = $request->validate([
@@ -114,15 +99,15 @@ class SiswaController extends Controller
         return redirect()->route('siswa.dashboard')->with('success', 'Permintaan withdraw berhasil dibuat, menunggu persetujuan bank');
     }
 
-    public function transactions()
-    {
-        $user = Auth::user();
-        $transactions = Transaction::where('user_id', $user->id)
-            ->orWhere('target_id', $user->id)
-            ->with(['user', 'target'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+    // public function transactions()
+    // {
+    //     $user = Auth::user();
+    //     $transactions = Transaction::where('user_id', $user->id)
+    //         ->orWhere('target_id', $user->id)
+    //         ->with(['user', 'target'])
+    //         ->orderBy('created_at', 'desc')
+    //         ->paginate(15);
 
-        return view('siswa.transactions', compact('transactions'));
-    }
+    //     return view('siswa.transactions', compact('transactions'));
+    // }
 }

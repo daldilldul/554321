@@ -102,6 +102,8 @@
                 <td>
                     @if(($transaction->type === 'transfer' && $transaction->user_id === $user->id) || $transaction->type === 'withdraw')
                         <span class="negative">- Rp {{ number_format($transaction->amount, 0, ',', '.') }}</span>
+                        @elseif(($transaction->type === 'topup' && $transaction->status === 'rejected'))
+                        <span>-</span>
                     @else
                         <span class="positive">+ Rp {{ number_format($transaction->amount, 0, ',', '.') }}</span>
                     @endif

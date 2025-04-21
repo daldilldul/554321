@@ -6,7 +6,7 @@
 <div class="bg-white rounded-md shadow-md p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Transaksi {{ $user->name }}</h2>
-        <a href="{{ route('users.transactions.pdf', $user->id) }}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+        <a href="{{ route('admin.users.transactions.pdf', $user->id) }}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
             Download PDF
         </a>
     </div>
@@ -63,6 +63,8 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         @if(($transaction->type === 'transfer' && $transaction->user_id === $user->id) || $transaction->type === 'withdraw')
                             <span class="text-red-600">- Rp {{ number_format($transaction->amount, 0, ',', '.') }}</span>
+                        @elseif(($transaction->type === 'topup' && $transaction->status === 'rejected'))
+                            <span class=>-</span>
                         @else
                             <span class="text-green-600">+ Rp {{ number_format($transaction->amount, 0, ',', '.') }}</span>
                         @endif

@@ -6,7 +6,7 @@
     <div class="bg-white rounded-md shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Manajemen User</h2>
-            <a href="{{ route('users.create') }}"
+            <a href="{{ route('admin.users.create') }}"
                 class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
                 Tambah User Baru
             </a>
@@ -69,15 +69,15 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
-                                <a href="{{ route('users.transactions', $user->id) }}"
+                                <a href="{{ route('admin.users.transactions', $user->id) }}"
                                     class="text-blue-600 hover:text-blue-900">
                                     Transaksi
                                 </a>
-                                <a href="{{ route('users.edit', $user->id) }}"
+                                <a href="{{ route('admin.users.edit', $user->id) }}"
                                     class="text-indigo-600 hover:text-indigo-900">
                                     Edit
                                 </a>
-                                <form method="POST" action="{{ route('users.delete', $user->id) }}" class="inline">
+                                <form method="POST" action="{{ route('admin.users.delete', $user->id) }}" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-900"
