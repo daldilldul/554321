@@ -291,7 +291,7 @@
                                 @if (($transaction->type === 'transfer' && $transaction->user_id === Auth::id()) || $transaction->type === 'withdraw')
                                     <span class="text-red-600">- Rp
                                         {{ number_format($transaction->amount, 0, ',', '.') }}</span>
-                                @elseif($transaction->type === 'topup' && $transaction->status === 'rejected')
+                                @elseif($transaction->type === 'topup'  $transaction->type === 'withdraw' && $transaction->status === 'rejected')
                                     <span>-</span>
                                 @else
                                     <span class="text-green-600">+ Rp

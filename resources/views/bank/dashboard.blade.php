@@ -18,6 +18,10 @@
         <a href="{{ route('bank.topup.form') }}" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
             Top Up Langsung
         </a>
+        <a href="{{ route('bank.withdraw.form') }}"
+            class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md hover:bg-indigo-200">
+            Withdaw Langsung
+        </a>
     </div>
 
     <h3 class="text-xl font-semibold mb-4">Transaksi Menunggu Persetujuan</h3>
